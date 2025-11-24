@@ -6,8 +6,7 @@ import retrofit2.http.GET
 
 interface GitHubApiService {
 
-    @GET("/users/repos")
+    @GET("/user/repos")
     fun getRepos(): Call<List<Repo>>
-
 
 }

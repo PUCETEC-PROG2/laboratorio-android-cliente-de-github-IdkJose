@@ -27,10 +27,7 @@ android {
         } else {
             ""
         }
-
         buildConfigField("String", "GITHUB_API_TOKEN", "\"$githubToken\"")
-
-
     }
 
     buildTypes {
@@ -44,9 +41,10 @@ android {
     }
 
     buildFeatures {
-        viewBinding= true
+        viewBinding = true
         buildConfig = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -63,10 +61,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     // Retrofit para networking
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 // Convertidor Gson para serializar/deserializar JSON
