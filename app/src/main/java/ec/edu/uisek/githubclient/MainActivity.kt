@@ -98,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    // Método público para recargar repositorios desde otros fragmentos
     fun refreshRepositories() {
         fetchRepositories()
     }
@@ -118,7 +117,6 @@ class MainActivity : AppCompatActivity() {
         val apiService = RetrofitClient.gitHubApiService
         val updateData = mutableMapOf<String, String>()
         
-        // Solo agregamos los campos que cambiaron
         if (newName != repo.name) {
             updateData["name"] = newName
         }
@@ -136,7 +134,6 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Repo>, response: Response<Repo>) {
                 if (response.isSuccessful) {
                     showMessage("Repositorio actualizado exitosamente")
-                    // Recargar la lista de repositorios
                     fetchRepositories()
                 } else {
                     val errorMsg = when (response.code()) {
@@ -166,7 +163,6 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful || response.code() == 204) {
                     showMessage("Repositorio '${repo.name}' eliminado exitosamente")
-                    // Recargar la lista de repositorios
                     fetchRepositories()
                 } else {
                     val errorMsg = when (response.code()) {

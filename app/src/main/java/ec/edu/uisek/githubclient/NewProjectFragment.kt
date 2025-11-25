@@ -44,7 +44,6 @@ class NewProjectFragment : Fragment() {
     }
 
     private fun createRepository(name: String, description: String) {
-        // Mostrar indicador de carga
         binding.btnSaveNewProject.isEnabled = false
         binding.btnSaveNewProject.text = "Creando..."
 
@@ -59,7 +58,6 @@ class NewProjectFragment : Fragment() {
         val call = apiService.createRepo(repoData)
         call.enqueue(object : Callback<Repo> {
             override fun onResponse(call: Call<Repo>, response: Response<Repo>) {
-                // Restaurar botón
                 binding.btnSaveNewProject.isEnabled = true
                 binding.btnSaveNewProject.text = getString(R.string.btn_save)
 
@@ -70,10 +68,8 @@ class NewProjectFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                     
-                    // Notificar a MainActivity que recargue la lista
                     (activity as? MainActivity)?.refreshRepositories()
                     
-                    // Cerrar el fragmento
                     parentFragmentManager.popBackStack()
                 } else {
                     val errorMsg = when (response.code()) {
@@ -88,7 +84,6 @@ class NewProjectFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<Repo>, t: Throwable) {
-                // Restaurar botón
                 binding.btnSaveNewProject.isEnabled = true
                 binding.btnSaveNewProject.text = getString(R.string.btn_save)
                 

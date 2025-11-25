@@ -23,9 +23,8 @@ class EditRepoDialogFragment(
         val btnCancel = view.findViewById<Button>(R.id.btn_cancel)
         val btnSave = view.findViewById<Button>(R.id.btn_save)
 
-        // Establecer valores actuales
         editName.setText(repo.name)
-        editName.isEnabled = false // No debe ser editable según requisitos
+        editName.isEnabled = false
         editDescription.setText(repo.description ?: "")
 
         val dialog = AlertDialog.Builder(requireContext())
