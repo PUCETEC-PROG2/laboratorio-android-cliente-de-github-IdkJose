@@ -25,6 +25,7 @@ class EditRepoDialogFragment(
 
         // Establecer valores actuales
         editName.setText(repo.name)
+        editName.isEnabled = false // No debe ser editable según requisitos
         editDescription.setText(repo.description ?: "")
 
         val dialog = AlertDialog.Builder(requireContext())

@@ -9,6 +9,11 @@ interface GitHubApiService {
     @GET("/user/repos")
     fun getRepos(): Call<List<Repo>>
 
+    @POST("/user/repos")
+    fun createRepo(
+        @Body repoData: Map<String, String>
+    ): Call<Repo>
+
     @PATCH("/repos/{owner}/{repo}")
     fun updateRepo(
         @Path("owner") owner: String,

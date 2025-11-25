@@ -98,6 +98,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // Método público para recargar repositorios desde otros fragmentos
+    fun refreshRepositories() {
+        fetchRepositories()
+    }
+
     private fun showMessage(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
