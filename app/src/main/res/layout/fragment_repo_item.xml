@@ -34,28 +34,22 @@
 
                 <ImageButton
                     android:id="@+id/btn_edit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Editar"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
-                    android:src="@android:drawable/ic_menu_edit"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_edit"
                     app:tint="@android:color/holo_blue_dark" />
 
                 <ImageButton
                     android:id="@+id/btn_delete"
-                    android:layout_width="wrap_content"
+                    android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Borrar"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
-                    android:src="@android:drawable/ic_menu_delete"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_delete"
                     app:tint="@android:color/holo_red_dark" />
             </LinearLayout>
 
