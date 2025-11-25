@@ -3,6 +3,7 @@ package ec.edu.uisek.githubclient
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ec.edu.uisek.githubclient.databinding.ActivityMainBinding
@@ -42,7 +43,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        reposAdapter = ReposAdapter()
+        reposAdapter = ReposAdapter(
+            onEditClick = { repo -> showEditDialog(repo) },
+            onDeleteClick = { repo -> deleteRepository(repo) }
+        )
         binding.repoRecyclerView.apply {
             adapter = reposAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -96,5 +100,85 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showEditDialog(repo: Repo) {
+        val dialog = EditRepoDialogFragment(repo) { newName, newDescription ->
+            updateRepository(repo, newName, newDescription)
+        }
+        dialog.show(supportFragmentManager, "EditRepoDialog")
+    }
+
+    private fun updateRepository(repo: Repo, newName: String, newDescription: String) {
+        val apiService = RetrofitClient.gitHubApiService
+        val updateData = mutableMapOf<String, String>()
+        
+        // Solo agregamos los campos que cambiaron
+        if (newName != repo.name) {
+            updateData["name"] = newName
+        }
+        if (newDescription != (repo.description ?: "")) {
+            updateData["description"] = newDescription
+        }
+
+        if (updateData.isEmpty()) {
+            showMessage("No hay cambios para guardar")
+            return
+        }
+
+        val call = apiService.updateRepo(repo.owner.login, repo.name, updateData)
+        call.enqueue(object : Callback<Repo> {
+            override fun onResponse(call: Call<Repo>, response: Response<Repo>) {
+                if (response.isSuccessful) {
+                    showMessage("Repositorio actualizado exitosamente")
+                    // Recargar la lista de repositorios
+                    fetchRepositories()
+                } else {
+                    val errorMsg = when (response.code()) {
+                        401 -> "Error de autenticación"
+                        403 -> "No tienes permisos para editar este repositorio"
+                        404 -> "Repositorio no encontrado"
+                        422 -> "Datos inválidos. El nombre puede estar en uso"
+                        else -> "Error al actualizar: ${response.code()}"
+                    }
+                    Log.e("MainActivity", "Error al actualizar: ${response.code()}")
+                    showMessage(errorMsg)
+                }
+            }
+
+            override fun onFailure(call: Call<Repo>, t: Throwable) {
+                Log.e("MainActivity", "Error de conexión al actualizar", t)
+                showMessage("Error de conexión: ${t.message}")
+            }
+        })
+    }
+
+    private fun deleteRepository(repo: Repo) {
+        val apiService = RetrofitClient.gitHubApiService
+        val call = apiService.deleteRepo(repo.owner.login, repo.name)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful || response.code() == 204) {
+                    showMessage("Repositorio '${repo.name}' eliminado exitosamente")
+                    // Recargar la lista de repositorios
+                    fetchRepositories()
+                } else {
+                    val errorMsg = when (response.code()) {
+                        401 -> "Error de autenticación"
+                        403 -> "No tienes permisos para eliminar este repositorio"
+                        404 -> "Repositorio no encontrado"
+                        else -> "Error al eliminar: ${response.code()}"
+                    }
+                    Log.e("MainActivity", "Error al eliminar: ${response.code()}")
+                    showMessage(errorMsg)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("MainActivity", "Error de conexión al eliminar", t)
+                showMessage("Error de conexión: ${t.message}")
+            }
+        })
     }
 }

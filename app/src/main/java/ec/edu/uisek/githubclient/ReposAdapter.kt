@@ -9,7 +9,11 @@ import ec.edu.uisek.githubclient.models.Repo
 
 // 1. Clase ViewHolder: Contiene las referencias a las vistas de un solo ítem.
 //    Usa la clase de ViewBinding generada para fragment_repo_item.xml.
-class RepoViewHolder(private val binding: FragmentRepoItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class RepoViewHolder(
+    private val binding: FragmentRepoItemBinding,
+    private val onEditClick: (Repo) -> Unit,
+    private val onDeleteClick: (Repo) -> Unit
+) : RecyclerView.ViewHolder(binding.root) {
 
     // 2. Función para vincular datos a las vistas del ítem.
     //    Por ahora, usaremos datos de ejemplo.
@@ -23,11 +27,23 @@ class RepoViewHolder(private val binding: FragmentRepoItemBinding) : RecyclerVie
             .error(R.mipmap.ic_launcher)
             .circleCrop()
             .into(binding.repoOwnerImage)
+
+        // Configurar listeners para los botones
+        binding.btnEdit.setOnClickListener {
+            onEditClick(repo)
+        }
+
+        binding.btnDelete.setOnClickListener {
+            onDeleteClick(repo)
+        }
     }
 }
 
 // 3. Clase Adapter: Gestiona la creación y actualización de los ViewHolders.
-class ReposAdapter : RecyclerView.Adapter<RepoViewHolder>() {
+class ReposAdapter(
+    private val onEditClick: (Repo) -> Unit,
+    private val onDeleteClick: (Repo) -> Unit
+) : RecyclerView.Adapter<RepoViewHolder>() {
 
     private var repositories : List<Repo> = emptyList()
     override fun getItemCount(): Int = repositories.size
@@ -40,7 +56,7 @@ class ReposAdapter : RecyclerView.Adapter<RepoViewHolder>() {
             parent,
             false
         )
-        return RepoViewHolder(binding)
+        return RepoViewHolder(binding, onEditClick, onDeleteClick)
     }
 
     // Se llama para vincular los datos a un ViewHolder en una posición específica.
